@@ -40,8 +40,8 @@
   --color-row-text-active: var(--row-text-active);
   --color-help-text: var(--help-text);
 
-  --font-display: "VT323", ui-monospace, monospace;
-  --font-body: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Comfortaa", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Comfortaa", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
