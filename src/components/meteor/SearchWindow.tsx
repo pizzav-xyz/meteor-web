@@ -3,7 +3,9 @@ import { MeteorWindow } from "./Window";
 import { ModuleRow } from "./ModuleRow";
 import { useEffect, useMemo, useRef } from "react";
 
-export function SearchWindow() {
+interface Props { x: number; y: number; width: number }
+
+export function SearchWindow({ x, y, width }: Props) {
   const { modules, search, setSearch } = useMeteor();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -34,7 +36,7 @@ export function SearchWindow() {
   );
 
   return (
-    <MeteorWindow title="Search">
+    <MeteorWindow title="Search" initialX={x} initialY={y} width={width} storageKey="search">
       <div className="px-2 py-2">
         <input
           ref={inputRef}
