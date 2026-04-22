@@ -4,7 +4,8 @@ import { MeteorWindow } from "./Window";
 import { ModuleRow } from "./ModuleRow";
 
 export function CategoryWindow({ category }: { category: Category }) {
-  const modules = useMeteor((s) => s.modules.filter((m) => m.category === category));
+  const allModules = useMeteor((s) => s.modules);
+  const modules = allModules.filter((m) => m.category === category);
   if (modules.length === 0) return null;
   return (
     <MeteorWindow title={category}>
