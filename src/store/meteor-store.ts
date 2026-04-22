@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { MODULES, type Module } from "@/lib/modules-data";
+import { createInitialModules, type Module } from "@/lib/modules-data";
 
 interface State {
   modules: Module[];
@@ -15,7 +15,7 @@ interface State {
 }
 
 export const useMeteor = create<State>((set) => ({
-  modules: MODULES,
+  modules: createInitialModules(),
   active: new Set(["fullbright", "discord-presence"]),
   favorites: new Set(["kill-aura"]),
   search: "",
@@ -41,10 +41,8 @@ export const useMeteor = create<State>((set) => ({
           ? m
           : {
               ...m,
-              settings: m.settings.map((st) =>
-                st.name === settingName ? { ...st, value } : st
-              ),
-            }
+              settings: m.settings.map((st) => (st.name === settingName ? { ...st, value } : st)),
+            },
       ),
     })),
 }));

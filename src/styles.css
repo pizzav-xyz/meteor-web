@@ -46,48 +46,51 @@
 
 :root {
   --radius: 0.25rem;
+  --app-accent: oklch(0.62 0.24 305);
 
   /* Meteor palette */
-  --meteor-purple: oklch(0.62 0.24 305);
-  --meteor-purple-soft: oklch(0.55 0.22 305);
+  --meteor-purple: var(--app-accent);
+  --meteor-purple-soft: color-mix(in oklab, var(--app-accent) 88%, black);
 
   --background: oklch(0.18 0.02 270);
   --foreground: oklch(0.95 0.01 280);
 
   --window-bg: oklch(0.16 0.02 270 / 0.92);
-  --window-row: oklch(0.20 0.02 270 / 0.85);
+  --window-row: oklch(0.2 0.02 270 / 0.85);
   --window-row-hover: oklch(0.27 0.05 295 / 0.9);
-  --window-border: oklch(0.30 0.04 290 / 0.6);
+  --window-border: oklch(0.3 0.04 290 / 0.6);
 
   --header-text: oklch(0.98 0.01 280);
   --row-text: oklch(0.85 0.02 280);
-  --row-text-active: oklch(0.62 0.24 305);
-  --help-text: oklch(0.62 0.24 305);
+  --row-text-active: var(--app-accent);
+  --help-text: var(--app-accent);
 
   --card: oklch(0.16 0.02 270);
   --card-foreground: oklch(0.95 0.01 280);
   --popover: oklch(0.16 0.02 270);
   --popover-foreground: oklch(0.95 0.01 280);
-  --primary: oklch(0.62 0.24 305);
+  --primary: var(--app-accent);
   --primary-foreground: oklch(0.16 0.02 270);
   --secondary: oklch(0.27 0.04 290);
   --secondary-foreground: oklch(0.95 0.01 280);
   --muted: oklch(0.25 0.03 285);
-  --muted-foreground: oklch(0.70 0.02 280);
-  --accent: oklch(0.62 0.24 305);
+  --muted-foreground: oklch(0.7 0.02 280);
+  --accent: var(--app-accent);
   --accent-foreground: oklch(0.16 0.02 270);
-  --destructive: oklch(0.60 0.22 25);
+  --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.98 0.01 280);
-  --border: oklch(0.30 0.04 290 / 0.5);
+  --border: oklch(0.3 0.04 290 / 0.5);
   --input: oklch(0.22 0.03 280);
-  --ring: oklch(0.62 0.24 305);
+  --ring: var(--app-accent);
 }
 
 @layer base {
   * {
     border-color: var(--color-border);
   }
-  html, body, #root {
+  html,
+  body,
+  #root {
     height: 100%;
   }
   body {
@@ -102,9 +105,9 @@
 /* Minecraft-style background */
 .mc-bg {
   background:
-    radial-gradient(ellipse at 30% 20%, oklch(0.30 0.08 250 / 0.5), transparent 60%),
-    radial-gradient(ellipse at 70% 80%, oklch(0.32 0.10 200 / 0.4), transparent 60%),
-    linear-gradient(180deg, oklch(0.20 0.04 250) 0%, oklch(0.14 0.02 260) 100%);
+    radial-gradient(ellipse at 30% 20%, oklch(0.3 0.08 250 / 0.5), transparent 60%),
+    radial-gradient(ellipse at 70% 80%, oklch(0.32 0.1 200 / 0.4), transparent 60%),
+    linear-gradient(180deg, oklch(0.2 0.04 250) 0%, oklch(0.14 0.02 260) 100%);
   position: relative;
 }
 .mc-bg::before {
@@ -121,9 +124,11 @@
 
 /* Window header gradient */
 .header-gradient {
-  background: linear-gradient(180deg,
-    oklch(0.65 0.24 305) 0%,
-    oklch(0.52 0.22 305) 100%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--app-accent) 100%, white 6%) 0%,
+    color-mix(in oklab, var(--app-accent) 84%, black) 100%
+  );
 }
 
 /* Active accent strip */
@@ -132,10 +137,15 @@
 }
 
 /* Scrollbars */
-.thin-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-.thin-scroll::-webkit-scrollbar-track { background: transparent; }
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
 .thin-scroll::-webkit-scrollbar-thumb {
-  background: oklch(0.40 0.10 295 / 0.6);
+  background: oklch(0.4 0.1 295 / 0.6);
   border-radius: 3px;
 }
 .thin-scroll::-webkit-scrollbar-thumb:hover {
@@ -144,12 +154,20 @@
 
 /* Tab pill */
 .tab-active {
-  text-shadow: 0 0 8px oklch(0.62 0.24 305 / 0.6);
+  text-shadow: 0 0 8px color-mix(in oklab, var(--app-accent) 60%, transparent);
   border-bottom: 2px solid var(--meteor-purple);
 }
 
 @keyframes window-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.window-in { animation: window-in 0.2s ease-out; }
+.window-in {
+  animation: window-in 0.2s ease-out;
+}
