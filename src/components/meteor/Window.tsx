@@ -51,7 +51,8 @@ export function MeteorWindow({
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    e.preventDefault();
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     dragState.current = {
       startX: e.clientX,
       startY: e.clientY,
