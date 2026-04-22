@@ -2,7 +2,9 @@ import { useMeteor } from "@/store/meteor-store";
 import { MeteorWindow } from "./Window";
 import { ModuleRow } from "./ModuleRow";
 
-export function FavoritesWindow() {
+interface Props { x: number; y: number; width: number }
+
+export function FavoritesWindow({ x, y, width }: Props) {
   const { modules, favorites } = useMeteor();
   if (favorites.size === 0) return null;
   const favs = modules
@@ -10,7 +12,7 @@ export function FavoritesWindow() {
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <MeteorWindow title="Favorites">
+    <MeteorWindow title="Favorites" initialX={x} initialY={y} width={width} storageKey="favorites">
       {favs.map((m) => <ModuleRow key={m.id} module={m} />)}
     </MeteorWindow>
   );
