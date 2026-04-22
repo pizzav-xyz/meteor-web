@@ -217,11 +217,9 @@ export function SettingControl({ moduleId, setting }: { moduleId: string; settin
             selectedCount={setting.selectedCount ?? 0}
             totalCount={total}
             pool={pool}
-            onChange={(count) =>
-              update(moduleId, setting.name, "") &&
-              // also store count via separate update — store doesn't track count, but UI re-renders from local state
-              count
-            }
+            onChange={() => {
+              update(moduleId, setting.name, "");
+            }}
           />
         );
       }
