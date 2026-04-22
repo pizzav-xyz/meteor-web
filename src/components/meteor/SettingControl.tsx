@@ -1,6 +1,6 @@
 import type { Setting } from "@/lib/modules-data";
 import { useMeteor } from "@/store/meteor-store";
-import { ChevronDown, RotateCcw, Check } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 function CustomSelect({
@@ -117,12 +117,10 @@ function MultiSelect({
                 className="flex items-center gap-2 w-full text-left px-2 py-1 font-display text-base text-row-text hover:bg-meteor-purple/30"
               >
                 <span
-                  className={`w-4 h-4 border border-window-border flex items-center justify-center ${
+                  className={`w-4 h-4 border border-window-border ${
                     isSel ? "bg-meteor-purple" : "bg-input"
                   }`}
-                >
-                  {isSel && <Check className="w-3 h-3 text-white" />}
-                </span>
+                />
                 <span className="flex-1">{o}</span>
               </button>
             );
