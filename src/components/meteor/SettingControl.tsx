@@ -1,6 +1,148 @@
 import type { Setting } from "@/lib/modules-data";
 import { useMeteor } from "@/store/meteor-store";
-import { ChevronDown, RotateCcw } from "lucide-react";
+import { ChevronDown, RotateCcw, Check } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+function CustomSelect({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: string[];
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center gap-2 bg-input border border-window-border px-2 pr-1 py-0.5 font-display text-lg text-row-text hover:border-meteor-purple focus:outline-none focus:border-meteor-purple min-w-[8rem]"
+      >
+        <span className="flex-1 text-left">{value}</span>
+        <ChevronDown className="w-4 h-4 text-meteor-purple" />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-1 z-50 min-w-full border border-window-border bg-window-bg shadow-lg max-h-60 overflow-y-auto thin-scroll">
+          {options.map((o) => (
+            <button
+              key={o}
+              type="button"
+              onClick={() => {
+                onChange(o);
+                setOpen(false);
+              }}
+              className={`block w-full text-left px-2 py-1 font-display text-lg hover:bg-meteor-purple/30 ${
+                o === value ? "text-meteor-purple" : "text-row-text"
+              }`}
+            >
+              {o}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MultiSelect({
+  selectedCount,
+  totalCount,
+  pool,
+  onChange,
+}: {
+  selectedCount: number;
+  totalCount: number;
+  pool: string[];
+  onChange: (count: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(() => {
+    const s = new Set<string>();
+    for (let i = 0; i < Math.min(selectedCount, pool.length); i++) s.add(pool[i]);
+    return s;
+  });
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [open]);
+
+  const toggle = (v: string) => {
+    const next = new Set(selected);
+    if (next.has(v)) next.delete(v);
+    else next.add(v);
+    setSelected(next);
+    onChange(next.size);
+  };
+
+  return (
+    <div ref={ref} className="relative flex items-center gap-2">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="bg-input border border-window-border px-2 py-0.5 font-display text-lg text-row-text hover:border-meteor-purple"
+      >
+        Select
+      </button>
+      <span className="font-display text-lg text-muted-foreground">
+        ({selected.size} / {totalCount} selected)
+      </span>
+      {open && (
+        <div className="absolute left-0 top-full mt-1 z-50 w-64 border border-window-border bg-window-bg shadow-lg max-h-72 overflow-y-auto thin-scroll">
+          {pool.map((o) => {
+            const isSel = selected.has(o);
+            return (
+              <button
+                key={o}
+                type="button"
+                onClick={() => toggle(o)}
+                className="flex items-center gap-2 w-full text-left px-2 py-1 font-display text-base text-row-text hover:bg-meteor-purple/30"
+              >
+                <span
+                  className={`w-4 h-4 border border-window-border flex items-center justify-center ${
+                    isSel ? "bg-meteor-purple" : "bg-input"
+                  }`}
+                >
+                  {isSel && <Check className="w-3 h-3 text-white" />}
+                </span>
+                <span className="flex-1">{o}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const POOL_BY_NAME: Record<string, string[]> = {
+  "Selected Weapon Types": ["Sword", "Axe", "Pickaxe", "Shovel", "Hoe"],
+  Entities: [
+    "Zombie", "Skeleton", "Creeper", "Spider", "Enderman", "Player",
+    "Witch", "Pillager", "Vindicator", "Evoker", "Phantom", "Slime",
+    "Magma Cube", "Blaze", "Ghast", "Wither Skeleton", "Piglin",
+    "Hoglin", "Zoglin", "Drowned",
+  ],
+  Foods: ["Apple", "Bread", "Cooked Beef", "Cooked Chicken", "Carrot", "Potato", "Golden Apple", "Cooked Porkchop"],
+};
 
 export function SettingControl({ moduleId, setting }: { moduleId: string; setting: Setting }) {
   const update = useMeteor((s) => s.updateSetting);
@@ -20,18 +162,11 @@ export function SettingControl({ moduleId, setting }: { moduleId: string; settin
         );
       case "enum":
         return (
-          <div className="relative">
-            <select
-              value={String(setting.value)}
-              onChange={(e) => update(moduleId, setting.name, e.target.value)}
-              className="appearance-none bg-input border border-window-border px-2 pr-7 py-0.5 font-display text-lg text-row-text cursor-pointer focus:outline-none focus:border-meteor-purple"
-            >
-              {setting.options?.map((o) => (
-                <option key={o} value={o}>{o}</option>
-              ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 w-4 h-4 text-meteor-purple" />
-          </div>
+          <CustomSelect
+            value={String(setting.value)}
+            options={setting.options ?? []}
+            onChange={(v) => update(moduleId, setting.name, v)}
+          />
         );
       case "int":
       case "double": {
@@ -39,15 +174,17 @@ export function SettingControl({ moduleId, setting }: { moduleId: string; settin
         const min = setting.min ?? 0;
         const max = setting.max ?? 100;
         const step = setting.type === "int" ? 1 : 0.001;
+        const display = setting.type === "int" ? String(val) : val.toFixed(3);
         return (
           <div className="flex items-center gap-2 flex-1">
             <input
-              type="number"
-              value={setting.type === "int" ? val : val.toFixed(3)}
-              min={min}
-              max={max}
-              step={step}
-              onChange={(e) => update(moduleId, setting.name, Number(e.target.value))}
+              type="text"
+              inputMode={setting.type === "int" ? "numeric" : "decimal"}
+              value={display}
+              onChange={(e) => {
+                const n = Number(e.target.value);
+                if (!Number.isNaN(n)) update(moduleId, setting.name, n);
+              }}
               className="w-20 bg-input border border-window-border px-2 py-0.5 font-display text-lg text-row-text focus:outline-none focus:border-meteor-purple"
             />
             <div className="relative flex-1 h-1.5 bg-input rounded-full">
@@ -72,20 +209,20 @@ export function SettingControl({ moduleId, setting }: { moduleId: string; settin
           </div>
         );
       }
-      case "select":
+      case "select": {
+        const pool = POOL_BY_NAME[setting.name] ?? ["Item A", "Item B", "Item C", "Item D"];
+        const total = setting.totalCount ?? pool.length;
         return (
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="bg-input border border-window-border px-2 py-0.5 font-display text-lg text-row-text hover:border-meteor-purple"
-            >
-              Select
-            </button>
-            <span className="font-display text-lg text-muted-foreground">
-              ({setting.selectedCount} selected)
-            </span>
-          </div>
+          <MultiSelect
+            selectedCount={setting.selectedCount ?? 0}
+            totalCount={total}
+            pool={pool}
+            onChange={() => {
+              update(moduleId, setting.name, "");
+            }}
+          />
         );
+      }
       case "keybind":
         return (
           <button
