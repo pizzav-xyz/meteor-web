@@ -15,12 +15,12 @@ function SettingMedia({
   caption?: string;
 }) {
   return (
-    <div className="ml-[192px] mt-1 border border-window-border bg-input p-2">
+    <div className="mt-1 w-full border border-window-border bg-input p-2">
       {type === "image" ? (
         <img
           src={src}
           alt={alt ?? ""}
-          className="block max-h-52 w-full max-w-xs border border-window-border object-cover"
+          className="block max-h-64 w-full border border-window-border object-cover"
         />
       ) : (
         <video
@@ -29,7 +29,7 @@ function SettingMedia({
           muted
           playsInline
           preload="metadata"
-          className="block max-h-52 w-full max-w-xs border border-window-border bg-window-bg"
+          className="block max-h-64 w-full border border-window-border bg-window-bg"
         />
       )}
       {caption ? <div className="pt-2 font-display text-sm text-row-text">{caption}</div> : null}
@@ -338,7 +338,11 @@ export function SettingControl({ moduleId, setting }: { moduleId: string; settin
           <RotateCcw className="w-4 h-4" />
         </button>
       </div>
-      {setting.media ? <SettingMedia {...setting.media} /> : null}
+      {setting.media ? (
+        <div className="mt-1 pl-[183px] pr-5">
+          <SettingMedia {...setting.media} />
+        </div>
+      ) : null}
     </div>
   );
 }
