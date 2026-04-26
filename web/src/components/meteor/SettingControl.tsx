@@ -3,6 +3,40 @@ import { useMeteor } from "@/store/meteor-store";
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+function SettingMedia({
+  type,
+  src,
+  alt,
+  caption,
+}: {
+  type: "image" | "video";
+  src: string;
+  alt?: string;
+  caption?: string;
+}) {
+  return (
+    <div className="ml-[192px] mt-1 border border-window-border bg-input p-2">
+      {type === "image" ? (
+        <img
+          src={src}
+          alt={alt ?? ""}
+          className="block max-h-52 w-full max-w-xs border border-window-border object-cover"
+        />
+      ) : (
+        <video
+          src={src}
+          controls
+          muted
+          playsInline
+          preload="metadata"
+          className="block max-h-52 w-full max-w-xs border border-window-border bg-window-bg"
+        />
+      )}
+      {caption ? <div className="pt-2 font-display text-sm text-row-text">{caption}</div> : null}
+    </div>
+  );
+}
+
 function normalizeColorValue(value: string): string {
   if (/^#[0-9a-f]{6}$/i.test(value)) return value;
 
@@ -290,18 +324,21 @@ export function SettingControl({ moduleId, setting }: { moduleId: string; settin
   };
 
   return (
-    <div className="flex items-center gap-3 px-3 py-1">
-      <label className="font-display text-lg text-row-text min-w-[180px]">
-        {setting.name}
-      </label>
-      <div className="flex-1 flex items-center">{renderControl()}</div>
-      <button
-        type="button"
-        className="text-muted-foreground hover:text-meteor-purple"
-        title="Reset"
-      >
-        <RotateCcw className="w-4 h-4" />
-      </button>
+    <div className="px-3 py-1">
+      <div className="flex items-center gap-3">
+        <label className="font-display text-lg text-row-text min-w-[180px]">
+          {setting.name}
+        </label>
+        <div className="flex-1 flex items-center">{renderControl()}</div>
+        <button
+          type="button"
+          className="text-muted-foreground hover:text-meteor-purple"
+          title="Reset"
+        >
+          <RotateCcw className="w-4 h-4" />
+        </button>
+      </div>
+      {setting.media ? <SettingMedia {...setting.media} /> : null}
     </div>
   );
 }

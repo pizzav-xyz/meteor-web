@@ -4,6 +4,44 @@ import { SettingControl } from "./SettingControl";
 import { Star, Copy, Clipboard, X } from "lucide-react";
 import { useEffect, useMemo } from "react";
 
+function ModuleMedia({
+  type,
+  src,
+  alt,
+  caption,
+}: {
+  type: "image" | "video";
+  src: string;
+  alt?: string;
+  caption?: string;
+}) {
+  return (
+    <div className="border-t border-window-border px-3 py-2">
+      <div className="border border-window-border bg-input p-2">
+        {type === "image" ? (
+          <img
+            src={src}
+            alt={alt ?? ""}
+            className="block max-h-72 w-full object-cover border border-window-border"
+          />
+        ) : (
+          <video
+            src={src}
+            controls
+            muted
+            playsInline
+            preload="metadata"
+            className="block max-h-72 w-full border border-window-border bg-window-bg"
+          />
+        )}
+        {caption ? (
+          <div className="pt-2 font-display text-sm text-row-text">{caption}</div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 export function ModuleSettingsScreen() {
   const { openModuleId, openModule, modules, favorites, toggleFavorite, active, toggle } =
     useMeteor();
@@ -77,6 +115,8 @@ export function ModuleSettingsScreen() {
         <div className="px-3 py-2 font-display text-lg text-row-text">
           {module.description}
         </div>
+
+        {module.media ? <ModuleMedia {...module.media} /> : null}
 
         {/* Groups */}
         {groups.map((g) => (
