@@ -1,0 +1,183 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-meteor-purple: var(--meteor-purple);
+  --color-meteor-purple-soft: var(--meteor-purple-soft);
+  --color-window-bg: var(--window-bg);
+  --color-window-row: var(--window-row);
+  --color-window-row-hover: var(--window-row-hover);
+  --color-window-border: var(--window-border);
+  --color-header-text: var(--header-text);
+  --color-row-text: var(--row-text);
+  --color-row-text-active: var(--row-text-active);
+  --color-help-text: var(--help-text);
+
+  --font-display: "Comfortaa", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Comfortaa", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.25rem;
+  --app-accent: oklch(0.62 0.24 25);
+  --app-accent-strong: color-mix(in oklab, var(--app-accent) 100%, white 6%);
+  --app-accent-soft: color-mix(in oklab, var(--app-accent) 72%, black);
+  --app-accent-deep: color-mix(in oklab, var(--app-accent) 32%, black);
+  --app-accent-shadow: color-mix(in oklab, var(--app-accent) 14%, black);
+  --app-accent-surface: color-mix(in oklab, var(--app-accent) 18%, black);
+  --app-accent-surface-2: color-mix(in oklab, var(--app-accent) 24%, black);
+  --app-accent-surface-3: color-mix(in oklab, var(--app-accent) 32%, black);
+  --app-accent-border: color-mix(in oklab, var(--app-accent) 34%, black);
+  --app-accent-text: color-mix(in oklab, var(--app-accent) 12%, white);
+  --app-accent-text-muted: color-mix(in oklab, var(--app-accent) 26%, white);
+
+  /* Meteor palette */
+  --meteor-purple: var(--app-accent);
+  --meteor-purple-soft: var(--app-accent-soft);
+
+  --background: color-mix(in oklab, var(--app-accent) 10%, black);
+  --foreground: var(--app-accent-text);
+
+  --window-bg: var(--app-accent-shadow);
+  --window-row: var(--app-accent-surface);
+  --window-row-hover: var(--app-accent-surface-3);
+  --window-border: var(--app-accent-border);
+
+  --header-text: color-mix(in oklab, var(--app-accent) 8%, white);
+  --row-text: var(--app-accent-text-muted);
+  --row-text-active: var(--app-accent);
+  --help-text: var(--app-accent);
+
+  --card: var(--app-accent-shadow);
+  --card-foreground: var(--app-accent-text);
+  --popover: var(--app-accent-shadow);
+  --popover-foreground: var(--app-accent-text);
+  --primary: var(--app-accent);
+  --primary-foreground: color-mix(in oklab, var(--app-accent) 10%, black);
+  --secondary: var(--app-accent-surface-3);
+  --secondary-foreground: var(--app-accent-text);
+  --muted: var(--app-accent-surface-2);
+  --muted-foreground: color-mix(in oklab, var(--app-accent) 18%, white);
+  --accent: var(--app-accent);
+  --accent-foreground: color-mix(in oklab, var(--app-accent) 10%, black);
+  --destructive: color-mix(in oklab, var(--app-accent) 55%, red);
+  --destructive-foreground: var(--app-accent-text);
+  --border: color-mix(in oklab, var(--app-accent) 28%, black);
+  --input: var(--app-accent-surface-2);
+  --ring: var(--app-accent);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+}
+
+/* Minecraft-style background */
+.mc-bg {
+  background:
+    radial-gradient(ellipse at 30% 20%, color-mix(in oklab, var(--app-accent) 34%, transparent) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, color-mix(in oklab, var(--app-accent) 26%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, color-mix(in oklab, var(--app-accent) 16%, black) 0%, color-mix(in oklab, var(--app-accent) 10%, black) 100%);
+  position: relative;
+}
+.mc-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(oklch(0 0 0 / 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0 0 0 / 0.25) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Window header gradient */
+.header-gradient {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--app-accent) 100%, white 6%) 0%,
+    color-mix(in oklab, var(--app-accent) 84%, black) 100%
+  );
+}
+
+/* Active accent strip */
+.accent-strip {
+  box-shadow: inset 3px 0 0 0 var(--meteor-purple);
+}
+
+/* Scrollbars */
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--app-accent) 44%, black);
+  border-radius: 3px;
+}
+.thin-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--meteor-purple);
+}
+
+/* Tab pill */
+.tab-active {
+  text-shadow: 0 0 8px color-mix(in oklab, var(--app-accent) 60%, transparent);
+  border-bottom: 2px solid var(--meteor-purple);
+}
+
+@keyframes window-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.window-in {
+  animation: window-in 0.2s ease-out;
+}
