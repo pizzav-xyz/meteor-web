@@ -1,6 +1,6 @@
 import type { Setting } from "@/lib/modules-data";
 import { useMeteor } from "@/store/meteor-store";
-import { ChevronDown, RotateCcw } from "lucide-react";
+import { ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 function SettingMedia({
@@ -183,6 +183,11 @@ function MultiSelect({
 
 export function SettingControl({ moduleId, setting }: { moduleId: string; setting: Setting }) {
   const update = useMeteor((s) => s.updateSetting);
+  const [showMedia, setShowMedia] = useState(false);
+
+  useEffect(() => {
+    setShowMedia(false);
+  }, [moduleId, setting.name]);
 
   const renderControl = () => {
     switch (setting.type) {
@@ -340,7 +345,16 @@ export function SettingControl({ moduleId, setting }: { moduleId: string; settin
       </div>
       {setting.media ? (
         <div className="mt-1 pl-[183px] pr-5">
-          <SettingMedia {...setting.media} />
+          <button
+            type="button"
+            onClick={() => setShowMedia((current) => !current)}
+            className="flex w-full items-center justify-between border border-window-border bg-input px-2 py-1 font-display text-base text-row-text hover:border-meteor-purple"
+            aria-expanded={showMedia}
+          >
+            <span>Show media</span>
+            {showMedia ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
+          {showMedia ? <SettingMedia {...setting.media} /> : null}
         </div>
       ) : null}
     </div>

@@ -1,8 +1,8 @@
 import { useMeteor } from "@/store/meteor-store";
 import { MeteorWindow } from "./Window";
 import { SettingControl } from "./SettingControl";
-import { Star, Copy, Clipboard, X } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { Star, Copy, Clipboard, X, ChevronDown, ChevronUp } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 function ModuleMedia({
   type,
@@ -45,6 +45,7 @@ function ModuleMedia({
 export function ModuleSettingsScreen() {
   const { openModuleId, openModule, modules, favorites, toggleFavorite, active, toggle } =
     useMeteor();
+  const [showMedia, setShowMedia] = useState(false);
 
   const module = useMemo(
     () => modules.find((m) => m.id === openModuleId) ?? null,
@@ -58,6 +59,10 @@ export function ModuleSettingsScreen() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [openModuleId, openModule]);
+
+  useEffect(() => {
+    setShowMedia(false);
+  }, [module?.id]);
 
   if (!module) return null;
 
@@ -116,7 +121,20 @@ export function ModuleSettingsScreen() {
           {module.description}
         </div>
 
-        {module.media ? <ModuleMedia {...module.media} /> : null}
+        {module.media ? (
+          <div className="border-t border-window-border">
+            <button
+              type="button"
+              onClick={() => setShowMedia((current) => !current)}
+              className="flex w-full items-center justify-between px-3 py-2 font-display text-lg text-row-text hover:bg-meteor-purple/10"
+              aria-expanded={showMedia}
+            >
+              <span>Showcase media</span>
+              {showMedia ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+            {showMedia ? <ModuleMedia {...module.media} /> : null}
+          </div>
+        ) : null}
 
         {/* Groups */}
         {groups.map((g) => (
