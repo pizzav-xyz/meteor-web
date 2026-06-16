@@ -132,6 +132,10 @@ const DEFAULT_MODULES: Module[] = Array.isArray(modulesData) ? modulesData.map(p
 
 const BUILTIN_CATEGORY_ORDER = ["Combat", "Player", "Movement", "Render", "World", "Misc"] as const;
 
+export function formatName(name: string): string {
+  return name.replace(/[-_]+/g, " ").replace(/^./, (c) => c.toUpperCase());
+}
+
 export function createInitialModules(): Module[] {
   return structuredClone(DEFAULT_MODULES);
 }

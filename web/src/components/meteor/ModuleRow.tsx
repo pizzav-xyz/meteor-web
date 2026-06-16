@@ -1,5 +1,6 @@
 import { useMeteor } from "@/store/meteor-store";
 import type { Module } from "@/lib/modules-data";
+import { formatName } from "@/lib/modules-data";
 
 export function ModuleRow({ module }: { module: Module }) {
   const { active, toggle, openModule } = useMeteor();
@@ -17,7 +18,7 @@ export function ModuleRow({ module }: { module: Module }) {
         isActive ? "accent-strip text-row-text-active" : "text-row-text"
       }`}
     >
-      {module.name}
+      {formatName(module.name)}
     </button>
   );
 }

@@ -1,6 +1,7 @@
 import { useMeteor } from "@/store/meteor-store";
 import { MeteorWindow } from "./Window";
 import { SettingControl } from "./SettingControl";
+import { formatName } from "@/lib/modules-data";
 import { Star, Copy, Clipboard, X, ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -104,7 +105,7 @@ export function ModuleSettingsScreen() {
             />
           </button>
           <h2 className="flex-1 text-center font-display text-2xl text-header-text tracking-wide">
-            {module.name}
+            {formatName(module.name)}
           </h2>
           <button
             type="button"
