@@ -3,7 +3,9 @@ import { MeteorWindow } from "./Window";
 import { SettingControl } from "./SettingControl";
 import { formatName } from "@/lib/modules-data";
 import { Star, Copy, Clipboard, X, ChevronDown, ChevronUp } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+const DRAG_THRESHOLD = 4;
 
 function ModuleMedia({
   type,
@@ -47,6 +49,17 @@ export function ModuleSettingsScreen() {
   const { openModuleId, openModule, modules, favorites, toggleFavorite, active, toggle } =
     useMeteor();
   const [showMedia, setShowMedia] = useState(false);
+  const [dragging, setDragging] = useState(false);
+
+  const dragState = useRef<{
+    startX: number;
+    startY: number;
+    origX: number;
+    origY: number;
+    moved: boolean;
+  } | null>(null);
+
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
 
   const module = useMemo(
     () => modules.find((m) => m.id === openModuleId) ?? null,
@@ -63,6 +76,7 @@ export function ModuleSettingsScreen() {
 
   useEffect(() => {
     setShowMedia(false);
+    setPos(null);
   }, [module?.id]);
 
   if (!module) return null;
@@ -81,17 +95,59 @@ export function ModuleSettingsScreen() {
     g.settings.push(s);
   }
 
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    const rect = (e.currentTarget.parentElement as HTMLElement).getBoundingClientRect();
+    dragState.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      origX: rect.left,
+      origY: rect.top,
+      moved: false,
+    };
+    setDragging(true);
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    const ds = dragState.current;
+    if (!ds) return;
+    const dx = e.clientX - ds.startX;
+    const dy = e.clientY - ds.startY;
+    if (!ds.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+    ds.moved = true;
+    setPos({ x: ds.origX + dx, y: ds.origY + dy });
+  };
+
+  const onPointerUp = (_e: React.PointerEvent) => {
+    dragState.current = null;
+    setDragging(false);
+  };
+
+  const panelStyle = pos
+    ? { left: pos.x, top: pos.y, transform: "none" }
+    : { left: "50%", top: "50%", transform: "translate(-50%, -50%)" };
+
   return (
     <div
-      className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-background/40 backdrop-blur-[2px]"
+      className="absolute inset-0 z-50 bg-background/40 backdrop-blur-[2px]"
       onClick={() => openModule(null)}
     >
       <div
-        className="w-full max-w-xl max-h-[90vh] overflow-y-auto thin-scroll border border-window-border bg-window-bg shadow-2xl"
+        className="absolute w-full max-w-xl max-h-[90vh] overflow-y-auto thin-scroll border border-window-border bg-window-bg shadow-2xl"
+        style={panelStyle}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="header-gradient flex items-center px-2 py-1.5 gap-2">
+        {/* Header - Drag Handle */}
+        <div
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          className={`header-gradient flex items-center px-2 py-1.5 gap-2 select-none ${
+            dragging ? "cursor-grabbing" : "cursor-grab"
+          }`}
+        >
           <button
             type="button"
             onClick={() => toggleFavorite(module.id)}
