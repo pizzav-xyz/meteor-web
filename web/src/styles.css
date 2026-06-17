@@ -114,31 +114,23 @@
 
 /* Minecraft-style background */
 .mc-bg {
-  background:
-    radial-gradient(ellipse at 30% 20%, color-mix(in oklab, var(--app-accent) 34%, transparent) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 80%, color-mix(in oklab, var(--app-accent) 26%, transparent) 0%, transparent 60%),
-    linear-gradient(180deg, color-mix(in oklab, var(--app-accent) 16%, black) 0%, color-mix(in oklab, var(--app-accent) 10%, black) 100%);
+  background-image: url('/panorama.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   position: relative;
 }
-.mc-bg::before {
+.mc-bg::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(oklch(0 0 0 / 0.25) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0 0 0 / 0.25) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mix-blend-mode: overlay;
+  background: rgba(0, 0, 0, 0.4);
   pointer-events: none;
 }
 
-/* Window header gradient */
+/* Window header */
 .header-gradient {
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--app-accent) 100%, white 6%) 0%,
-    color-mix(in oklab, var(--app-accent) 84%, black) 100%
-  );
+  background-color: var(--app-accent-strong);
 }
 
 /* Active accent strip */

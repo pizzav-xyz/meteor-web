@@ -151,6 +151,7 @@ export function ModuleSettingsScreen() {
           <button
             type="button"
             onClick={() => toggleFavorite(module.id)}
+            onPointerDown={(e) => e.stopPropagation()}
             className="p-1 hover:scale-110 transition-transform"
             aria-label="favorite"
           >
@@ -166,6 +167,7 @@ export function ModuleSettingsScreen() {
           <button
             type="button"
             onClick={() => openModule(null)}
+            onPointerDown={(e) => e.stopPropagation()}
             className="p-1 text-header-text hover:text-white"
             aria-label="close"
           >
